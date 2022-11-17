@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kanban App</title>
+  <link rel="shortcut icon" type="image/png" href="/assets/favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/assets/css/_remake.css">
+  <link rel="stylesheet" type="text/css" href="/assets/css/base.css">
+  <link rel="stylesheet" type="text/css" href="/assets/css/accounts.css">
+  <link rel="stylesheet" type="text/css" href="/assets/css/flash.css">
+  <link rel="stylesheet" type="text/css" href="/assets/css/site-nav.css">
+  <link rel="stylesheet" type="text/css" href="/assets/css/text-field.css">
+  <link rel="stylesheet" type="text/css" href="/assets/css/front-page.css">
+  <link rel="stylesheet" type="text/css" href="/assets/css/kanban.css">
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <a class="logo" href="{{#if currentUser}}/{{currentUser.details.username}}{{else}}/{{/if}}">
+        <img class="logo__image" src="/assets/images/logo.svg">
+        <span class="logo__text">TaskFellow <span class="logo__version">v1.0</span></span>
+      </a>
+      {{#if currentUser}}
+        <div class="nav__user">
+          <div>{{currentUser.details.username}}</div>
+          <a class="nav__button" href="/user/logout">Logout</a>
+        </div>
+      {{else}}
+        <div class="nav__user">
+          <a class="nav__button" href="/user/signup">Sign up</a>
+          <a class="nav__button" href="/user/login">Log in</a>
+        </div>
+      {{/if}}
+    </div>
+    {{#if flashErrors }}
+      {{#each flashErrors }}
+        <div class="flash flash--error">{{ this }}</div>
+      {{/each}}
+    {{/if}}
+    {{#if flashSuccesses }}
+      {{#each flashSuccesses }}
+        <div class="flash flash--success">{{ this }}</div>
+      {{/each}}
+    {{/if}}
+    {{> yield }}
+  </div>
+  {{#if isPageAuthor}}
+    {{!-- Don't load Remake framework if the page isn't editable --}}
+    <script src="/assets/js/vendor/Sortable.min.js"></script>
+    <script src="/assets/js/vendor/crostini.min.js"></script>
+    <script src="/remake/js/remake.min.js"></script>
+    <script src="/assets/js/remake-init.js"></script>
+  {{/if}}
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>
