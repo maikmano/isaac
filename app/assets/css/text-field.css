@@ -4,11 +4,13 @@
 }
 .text-field__label {
   display: block;
+
 }
 .text-field__label-text {
   display: block;
   margin-bottom: 0.4rem;
   font-weight: 500;
+  color: #673ab7;
 }
 .text-field__input {
   display: block;
@@ -16,4 +18,11 @@
   padding: 7px 5px 8px;
   font-size: 16px;
   line-height: 1.3em;
+  border-color: #673ab7;
+  border-radius: 3px;
+  color: #673ab7;
+  background-color: #bbb5c3;
+
 }
+
+

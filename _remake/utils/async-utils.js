@@ -7,16 +7,12 @@ const mkdirpAsync = promisify(mkdirp);
 const statAsync = promisify(fs.stat);
 const path = require("path");
 
-// e.g. let [posts, postErr] = await capture(getUsersPosts(userId));
-//   source: https://dev.to/sobiodarlington/better-error-handling-with-async-await-2e5m
 const capture = promise => {
   return promise
     .then(data => {
-      // console.log("capture data:", data);
       return [data, undefined];
     })
     .catch(error => {
-      // console.log("capture error:", error);
       return Promise.resolve([undefined, error]);
     });
 };

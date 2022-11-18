@@ -7,20 +7,7 @@ import {
   parseCopyDimensionsAttributes,
 } from "../parse-data-attributes";
 
-// Copy Layout Plugin
-// =====================
-//
-// [data-copy-layout]
-//   - set the position of the target element to the position of the clicked element
-//   - set the width and height of the target element to the dimensions of the clicked element
-//   - (optional) set the width and height of a different target element to the dimensions of the clicked element
-//
-// [data-copy-position]
-//   - set the position of the target element to the position of the clicked element
-//
-// [data-copy-dimensions]
-//   - set the width and height of the target element to the dimensions of the clicked element
-//
+
 
 let lookupParser = [
   {
@@ -40,36 +27,12 @@ let lookupParser = [
   },
 ];
 
-// Full specification for element with [data-copy-layout] attribute:
-//
-// selectorForPositionTarget
-// - target to copy position to
-// - e.g. ".abc" or "#xyz" (any selector)
-//
-// xOffset
-// - x-offset
-// - e.g. -30 or 42 (any integer)
-//
-// yOffset
-// - y-offset
-// - e.g. -20 or 21 (any integer)
-//
-// dimensionsName
-// - dimension name to copy
-// - e.g. "height" or "width" or "both"
-//
-// selectorForDimensionsTarget
-// - target to copy dimensions to
-// - e.g. ".abc" or "#xyz" (any selector)
-//
 
 on("click", "[data-copy-layout], [data-copy-position], [data-copy-dimensions]", event => {
   let sourceElement = event.currentTarget;
 
-  // parse position/dimensions attributes of source element as a list
   let listOfElementLayoutData = getListOfElementLayoutData(sourceElement);
 
-  // loop through list of layout data
   listOfElementLayoutData.forEach(
     ({
       selectorForPositionTarget,
@@ -79,23 +42,23 @@ on("click", "[data-copy-layout], [data-copy-position], [data-copy-dimensions]", 
       selectorForDimensionsTarget,
       copyMethod,
     }) => {
-      // get offset data for the source element, so we can use it in both functions, i.e. copyDimensions AND copyPosition
+
       let sourceElementOffsetData = getElementOffset(sourceElement);
 
-      // check if we're copying dimensions
+
       if (copyMethod === "dimensions" || copyMethod === "both") {
-        // if we don't have a dimensions target, set the target to the position's target (because that's the default)
+
         if (!selectorForDimensionsTarget) {
           selectorForDimensionsTarget = selectorForPositionTarget;
         }
 
-        // copy the dimensions from the source element onto the dimension's target
+
         copyDimensions(sourceElementOffsetData, selectorForDimensionsTarget, dimensionsName);
       }
 
-      // check if we're copying position
+
       if (copyMethod === "position" || copyMethod === "both") {
-        // copy the position from the source element onto the position target
+
         copyPosition(sourceElementOffsetData, selectorForPositionTarget, xOffset, yOffset);
       }
     }
@@ -106,12 +69,10 @@ function getListOfElementLayoutData(sourceElement) {
   let parsedData = [];
 
   lookupParser.forEach(parser => {
-    // figure out the parser to use
     if (sourceElement.matches(parser.selector)) {
-      // parse the attributes on the element
+
       let elemData = parser.parser(sourceElement); // e.g. {"selectorForPositionTarget", "xOffset", "yOffset", "dimensionsName", "selectorForDimensionsElTarget
 
-      // get the copy method
       elemData.copyMethod = parser.name;
 
       if (elemData.xOffset) {
@@ -126,22 +87,19 @@ function getListOfElementLayoutData(sourceElement) {
     }
   });
 
-  // return an array with all the parsed attributes
-  return parsedData; // e.g. [{copyMethod, selectorForPositionTarget, xOffset, yOffset, dimensionsName, selectorForDimensionsElTarget
+  return parsedData; 
 }
 
 function copyDimensions(sourceElementOffsetData, selectorForDimensionsTarget, dimensionsName) {
-  // get the new width and height data we want to set
+
   let { width, height } = sourceElementOffsetData;
 
-  // loop through the target elements
   $(selectorForDimensionsTarget).arr.forEach(targetElem => {
-    // if copying the width, set a new width
+
     if (dimensionsName === "width" || dimensionsName === "both") {
       targetElem.style.width = width + "px";
     }
 
-    // if copying the height, set a new height
     if (dimensionsName === "height" || dimensionsName === "both") {
       targetElem.style.height = height + "px";
     }

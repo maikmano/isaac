@@ -1,5 +1,4 @@
-// v1.1.2 https://github.com/dgraham/delegated-events
-// forked because its dependency selector-set wouldn't run in Node because 'window' was undefined
+
 
 import SelectorSet from "./selector-set";
 

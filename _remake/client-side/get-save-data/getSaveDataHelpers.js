@@ -41,8 +41,7 @@ export function addDataFromElementToDataObject(elem, parentData) {
   }
 }
 
-// example return value:
-// {key: "profileInfo", value: {name: "Kate"}}
+
 function parseNodeForSave(elem) {
   return {
     key: elem.getAttribute("key"),
@@ -50,12 +49,7 @@ function parseNodeForSave(elem) {
   };
 }
 
-// Only get saveable data (i.e. no temporary keys/values)
-// E.g.
-// Converts this element:
-// <div object key:example-one="1" key:example-two="2"></div>
-// Into:
-// {exampleOne: "1", exampleTwo: "2"}
+
 function getSaveDataFromElement(elem) {
   let keyPrefix = "key:";
   let data = {};

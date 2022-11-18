@@ -16,25 +16,20 @@ export async function createUserData({ appName, username, hash, email }) {
   let appData = userAppDataBootstrap;
   let details = userDetailsBootstrap;
 
-  // extend user details with args
   Object.assign(details, { appName, username, hash, email });
 
-  // make sure all the user data directories exist before writing to them
   await makeSureUserDataDirectoriesExist({ appName });
 
   let [appDataFileDir, detailsFileDir] = getDirForUserData({ appName, withFile: true, username });
   let appDataWritePromise = jsonfile.writeFile(appDataFileDir, appData, { spaces: 2 });
   let detailsWritePromise = jsonfile.writeFile(detailsFileDir, details, { spaces: 2 });
 
-  // let higher-level functions capture this if it errors
   await Promise.all([detailsWritePromise, appDataWritePromise]);
 
   return { details, appData };
 }
 
-// get all user data
-// - `type` field optional
-// returns: {details, appData}
+
 export async function getUserData({ username, type, appName }) {
   let [appDataFileDir, detailsFileDir] = getDirForUserData({ appName, withFile: true, username });
 

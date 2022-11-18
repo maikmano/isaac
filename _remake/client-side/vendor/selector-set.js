@@ -134,7 +134,6 @@ SelectorSet.prototype.indexes["default"] = {
   },
 };
 
-// Use ES Maps when supported
 var Map;
 if (typeof window !== "undefined" && typeof window.Map === "function") {
   Map = window.Map;
@@ -153,16 +152,12 @@ if (typeof window !== "undefined" && typeof window.Map === "function") {
   })();
 }
 
-// Regexps adopted from Sizzle
-//   https://github.com/jquery/sizzle/blob/1.7/sizzle.js
+
 //
 var chunker = /((?:\((?:\([^()]+\)|[^()]+)+\)|\[(?:\[[^\[\]]*\]|['"][^'"]*['"]|[^\[\]'"]+)+\]|\\.|[^ >+~,(\[\\]+)+|[>+~])(\s*,\s*)?((?:.|\r|\n)*)/g;
 
-// Internal: Get indexes for selector.
-//
-// selector - String CSS selector
-//
-// Returns Array of {index, key}.
+
+
 function parseSelectorIndexes(allIndexes, selector) {
   allIndexes = allIndexes.slice(0).concat(allIndexes["default"]);
 
@@ -205,12 +200,7 @@ function parseSelectorIndexes(allIndexes, selector) {
   return indexes;
 }
 
-// Internal: Find first item in Array that is a prototype of `proto`.
-//
-// ary   - Array of objects
-// proto - Prototype of expected item in `ary`
-//
-// Returns object from `ary` if found. Otherwise returns undefined.
+
 function findByPrototype(ary, proto) {
   var i, len, item;
   for (i = 0, len = ary.length; i < len; i++) {
@@ -221,26 +211,10 @@ function findByPrototype(ary, proto) {
   }
 }
 
-// Public: Log when added selector falls under the default index.
-//
-// This API should not be considered stable. May change between
-// minor versions.
-//
-// obj - {selector, data} Object
-//
-//   SelectorSet.prototype.logDefaultIndexUsed = function(obj) {
-//     console.warn(obj.selector, "could not be indexed");
-//   };
-//
-// Returns nothing.
+
 SelectorSet.prototype.logDefaultIndexUsed = function () {};
 
-// Public: Add selector to set.
-//
-// selector - String CSS selector
-// data     - Optional data Object (default: undefined)
-//
-// Returns nothing.
+
 SelectorSet.prototype.add = function (selector, data) {
   var obj,
     i,
@@ -293,12 +267,6 @@ SelectorSet.prototype.add = function (selector, data) {
   selectors.push(selector);
 };
 
-// Public: Remove selector from set.
-//
-// selector - String CSS selector
-// data     - Optional data Object (default: undefined)
-//
-// Returns nothing.
 SelectorSet.prototype.remove = function (selector, data) {
   if (typeof selector !== "string") {
     return;
@@ -352,21 +320,11 @@ SelectorSet.prototype.remove = function (selector, data) {
   }
 };
 
-// Sort by id property handler.
-//
-// a - Selector obj.
-// b - Selector obj.
-//
-// Returns Number.
 function sortById(a, b) {
   return a.id - b.id;
 }
 
-// Public: Find all matching decendants of the context element.
-//
-// context - An Element
-//
-// Returns Array of {selector, data, elements} matches.
+
 SelectorSet.prototype.queryAll = function (context) {
   if (!this.selectors.length) {
     return [];
@@ -401,11 +359,7 @@ SelectorSet.prototype.queryAll = function (context) {
   return results.sort(sortById);
 };
 
-// Public: Match element against all selectors in set.
-//
-// el - An Element
-//
-// Returns Array of {selector, data} matches.
+
 SelectorSet.prototype.matches = function (el) {
   if (!el) {
     return [];

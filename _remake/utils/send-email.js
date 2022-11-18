@@ -25,7 +25,6 @@ export function sendEmail({ email, subject, body }, callback) {
     return;
   }
 
-  // const mailgun = new Mailgun({ apiKey, domain });
 
   const mailgunClient = mailgun.client({
     username: 'api', 

@@ -14,6 +14,7 @@ import { getQueryParams } from "../utils/get-query-params";
 import { getHtmlWithUniqueIds } from "../utils/get-html-with-unique-ids";
 import { getSaveData } from "../client-side/get-save-data";
 import RemakeStore from "./remake-store";
+import { setValueForClosestKey } from '../client-side/data-utilities';
 
 const _ = deepdash(lodash);
 
@@ -30,10 +31,8 @@ export function initApiNew({ app }) {
     let params = req.urlData.pageParams;
     let { username, pageName, itemId } = params;
 
-    // default to using a template named in a handlebars #for loop
     let partialRenderFunc = RemakeStore.getNewItemRenderFunction({ appName, name: partialName });
 
-    // use a template from the /partials directory if no #for loop item is found
     if (!partialRenderFunc) {
       let [partialFileString] = await capture(getPartial({ appName, partialName }));
 
@@ -72,24 +71,22 @@ export function initApiNew({ app }) {
       return;
     }
 
-    // {res, appName, pageAuthor, data, itemId}
     let [itemData] = await capture(
       processData({ appName, res, pageAuthor, data, params, requestType: "ajax" })
     );
     let { currentItem, parentItem } = itemData;
 
-    // getting a skeleton of the data from the new item template so it can be filled with unique ids at every level
     let tempHtmlString = partialRenderFunc({});
     let domFromString = new JSDOM(tempHtmlString);
     let saveData = getSaveData(domFromString.window.document.body);
     let saveDataNested = {};
     saveDataNested[partialName] = saveData;
-    // merge skeleton of data from template with bootstrap data provided by user
+
     let [partialBootstrapData] = await capture(
       getBootstrapData({ appName, fileName: partialName })
     );
     let newItemData = _.merge(saveDataNested, partialBootstrapData);
-    // add a unique key to every plain object in the bootstrap data
+
     _.forEachDeep(newItemData, function (value, key, parentValue, context) {
       if (_.isPlainObject(value)) {
         value.id = getUniqueId();

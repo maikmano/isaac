@@ -16,7 +16,7 @@ import optionsData from "./optionsData";
 const camelCase = require("lodash/camelCase");
 
 function _defaultAddItemCallback({ templateName, listElem, whereToInsert, shouldTriggerEdit }) {
-  // pass the template name into an endpoint and get the resulting html back
+
   ajaxPost("/new", { templateName }, ajaxResponse => {
     let { htmlString, success } = ajaxResponse;
 
@@ -30,10 +30,10 @@ function _defaultAddItemCallback({ templateName, listElem, whereToInsert, should
       return;
     }
 
-    // insert the rendered template into that element
+
     listElem.insertAdjacentHTML(whereToInsert, htmlString);
 
-    // save needs to be called on the list element, not the item, so it doesn't try to save to a non-existent id
+
     callSaveFunction(listElem);
 
     let itemElem =
@@ -55,12 +55,12 @@ export default function () {
     callback: ({ matchingElement, matchingAttribute }) => {
       let attributeParts = matchingAttribute.split(":");
       let templateName = camelCase(attributeParts[1]);
-      // possible values in argArray: top/bottom or some selector
+
       let argArray = getAttributeValueAsArray(matchingElement, matchingAttribute);
       let position = argArray.indexOf("top") !== -1 ? "top" : "bottom";
       let whereToInsert = position === "top" ? "afterbegin" : "beforeend";
       let selector = argArray.find(arg => arg !== "top" && arg !== "bottom") || "[array]";
-      // find the nearest element matching the selector (searching through ancestors consecutively)
+
       let listElem = findNearest({ elem: matchingElement, selector });
 
       let shouldTriggerEdit = attributeParts.indexOf("edit") !== -1;

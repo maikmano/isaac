@@ -1,12 +1,4 @@
-// Parses strings that can have multiple parameters and sub-parameters embedded
 
-// This function removes all spaces from a string if, and only if, they are inside a parenthesis
-// 1 split string into a letters array
-// 2 loop through letters
-// 3 if letter is "(", set flag to true
-// 4 if letter is ")", set flag to false
-// 5 if flag is set to true and letter is a space, remove the space
-// 6 combine all letters into a final string
 function removeSpacesInParentheses(str) {
   let letters = str.split("");
   let newLetters = [];
@@ -29,31 +21,29 @@ function removeSpacesInParentheses(str) {
   return newLetters.join("");
 }
 
-// trims string, replaces multiple spaces with single spaces
 function formatSpaces(str) {
   return str.trim().replace(/  +/g, " ");
 }
 
 function parseAttributeString(attributesString) {
-  let formattedString = removeSpacesInParentheses(formatSpaces(attributesString)); // => "switchName(no-auto,parent) switchName2(auto,parent)"
-  let separatedParamSections = formattedString.split(" "); // => ["switchName(no-auto,parent)", "switchName2(auto,parent)"]
+  let formattedString = removeSpacesInParentheses(formatSpaces(attributesString)); 
+  let separatedParamSections = formattedString.split(" "); 
   let separatedAllParams = separatedParamSections.map(str =>
     str.replace(/\s|\)/g, "").split(/\(|,/)
-  ); // => [["switchName", "no-auto", "parent"], ["switchName2", "auto", "parent"]]
+  ); 
 
   return separatedAllParams;
 }
 
-// this parses multiple *repeating* parameters, each with possible *sub-parameters*
 function makeParseFunction(attributeName, keyNames) {
   return function parseFunction(elem) {
-    let attributesString = elem.getAttribute(attributeName); // e.g. "switchName(no-auto, parent) switchName2(auto, parent)"
+    let attributesString = elem.getAttribute(attributeName); 
 
     if (!attributesString) {
       return [];
     }
 
-    let parsedAttributeValues = parseAttributeString(attributesString); // e.g. [["switchName", "no-auto", "parent"], ["switchName2", "auto", "parent"]]
+    let parsedAttributeValues = parseAttributeString(attributesString); 
 
     return parsedAttributeValues.map(function (arrayOfValues) {
       let returnObj = {};
@@ -82,8 +72,7 @@ function parseStringWithIndefiniteNumberOfParams(attributesString) {
     return [];
   }
 
-  let parsedAttributeValues = parseAttributeString(attributesString); // e.g. [["func1", "1", "2"], ["func2"]]
-
+  let parsedAttributeValues = parseAttributeString(attributesString); 
   return parsedAttributeValues.map(function (arrayOfValues) {
     return {
       funcName: arrayOfValues[0],
@@ -92,7 +81,6 @@ function parseStringWithIndefiniteNumberOfParams(attributesString) {
   });
 }
 
-// this parses multiple parameters that *don't* repeat and *don't* have sub-parameters
 function makeSimpleParseFunction(attributeName, keyNames) {
   return function parseFunction(elem) {
     let attributesString = elem.getAttribute(attributeName);
@@ -102,7 +90,7 @@ function makeSimpleParseFunction(attributeName, keyNames) {
     }
 
     attributesString = formatSpaces(attributesString);
-    let parsedAttributeValues = attributesString.split(" "); // e.g. [".btn", "100", "-50", "both", ".btn--small"]
+    let parsedAttributeValues = attributesString.split(" "); 
 
     return parsedAttributeValues.reduce((accumulator, currentValue, index) => {
       let keyName = keyNames[index];
@@ -132,26 +120,18 @@ let parseCopyDimensionsAttributes = makeSimpleParseFunction("data-copy-dimension
 ]);
 
 function getAttributeValueAsArray(elem, attributeName) {
-  // get the value of the attribute
+
   let attributesString = elem.getAttribute(attributeName);
 
-  // if it's an empty string or doesn't exist, return an empty array
   if (!attributesString) {
     return [];
   }
 
-  // trim and replace duplicate spaces
   attributesString = formatSpaces(attributesString);
 
-  // return an array of the "words" in the string
   return attributesString.split(" ");
 }
 
-// -------------------------------------------------------------------------
-//    advanced attribute parsing (supports args that have spaces in them!)
-// -------------------------------------------------------------------------
-
-// matches everything but the special characters that mean something (i.e. "(", ")", ":", ",", "]")
 let regexForPhrase = /^[^\(\):,\s]+$/;
 let regexForPhraseOrSpecialCharacter = /([^\(\):,\s]+|[\(\):,]+)/g;
 
@@ -170,20 +150,16 @@ function assembleResult(parts) {
     let nextPart = parts[index + 1];
 
     if (!currentPart) {
-      // remove empty strings
       return;
     }
 
     if (previousPart === "(") {
       isWithinParens = true;
     }
-
-    // covers two cases: either we've just passed the modifier OR we're processing args
     if (previousPart === ":" || (previousPart === "(" && nextPart !== ":" && nextPart !== ")")) {
       hasModifierBeenProcessed = true;
     }
 
-    // reset if we're leaving a section
     if (currentPart === ")") {
       currentObject = undefined;
       isWithinParens = false;
@@ -194,16 +170,15 @@ function assembleResult(parts) {
       regexForPhrase.test(currentPart) &&
       (nextPart === "(" || (!isWithinParens && currentPart !== "(" && currentPart !== ")"))
     ) {
-      // create new object and add it to final array
+
       currentObject = {};
       extractedObjects.push(currentObject);
 
-      // this part is the "name" if it comes right before "("
       currentObject.name = currentPart.trim();
     }
 
     if (previousPart === "(" && (nextPart === ":" || nextPart === ")")) {
-      // this part is the "modifier" if it comes right after "(" and right before ":" OR a ")"
+
       if (regexForPhrase.test(currentPart)) {
         currentObject.modifier = currentPart.trim();
       }
@@ -211,7 +186,6 @@ function assembleResult(parts) {
 
     if (isWithinParens && hasModifierBeenProcessed && regexForPhrase.test(currentPart)) {
       currentObject.args = currentObject.args || [];
-      // it's one of the `args` if the modifier doesn't exist or has been processed and it's not a comma and it's before a ")"
       currentObject.args.push(currentPart.trim());
     }
   });
@@ -219,18 +193,7 @@ function assembleResult(parts) {
   return extractedObjects;
 }
 
-// turns strings like:
-// "favoriteColor(colorPicker: red blue orange green) profileName(text-single-line)"
-// into:
-// [{name: "favoriteColor", modifier: "colorPicker", args: ["red, blue, orange, green"]}, {name: "profileName", modifier: "text-single-line"}]
-//
-// rules
-// - each section is defined by a this structure: `string(string: string string string)`
-// - `name` is the first string in each section
-// - `modifier` is always the first string inside the parentheses
-// - `args` are always after the modifier
-// - modifier, args, and parentheses are all optional, but in order to have args you
-//   need a modifier and in order to have a modifier, you need parentheses
+
 function processAttributeString(attributeString) {
   let parts = getParts(attributeString);
   let extractedObjects = assembleResult(parts);

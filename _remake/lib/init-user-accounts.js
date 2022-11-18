@@ -13,7 +13,6 @@ function initUserAccounts({ app }) {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  // The local strategy require a `verify` function which receives the credentials
   passport.use(
     new LocalStrategy(
       {

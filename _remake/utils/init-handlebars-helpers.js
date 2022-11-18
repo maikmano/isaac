@@ -24,10 +24,10 @@ export function initHandlebarsHelpers({ Handlebars }) {
   Handlebars.registerHelper("generateIdIfNone", function (id, uniqueMarker, options) {
     if (!options) {
       options = uniqueMarker;
-      uniqueMarker = getUniqueId(); // should be unique by default so generateIdIfNone calls that don't provide a uniqueMarker each get unique ids
+      uniqueMarker = getUniqueId(); 
     }
 
-    uniqueMarker = (uniqueMarker || "").replace(/\W/g, "_"); // remove special characters
+    uniqueMarker = (uniqueMarker || "").replace(/\W/g, "_"); 
     return id || `__remake_unique_marker_${uniqueMarker}`;
   });
 
@@ -39,13 +39,7 @@ export function initHandlebarsHelpers({ Handlebars }) {
     }
   });
 
-  // #for
-  // a custom helper that loops over some items
-  //
-  // IMPORTANT:
-  // if you pass in a named param called `itemName`, you can refer to its
-  // name later in a `new:` attribute in order to render a new item on
-  // the page
+
   Handlebars.registerHelper("for", function (context, options) {
     RemakeStore.addNewItemRenderFunction({
       name: options.hash.itemName,
@@ -53,21 +47,18 @@ export function initHandlebarsHelpers({ Handlebars }) {
       appName: RemakeStore.isMultiTenant() ? this.appName : undefined,
     });
 
-    // render {{else}} block
     if (!context || context.length === 0) {
       return options.inverse(this);
     }
 
-    // contextItem has the data passed into the helper
     let overallRender = context
       .map(contextItem => {
-        // move the context item inside the provided name
+
         let data = {};
         if (options.hash.itemName) {
           data[options.hash.itemName] = contextItem;
         }
 
-        // render the inner template
         let renderedItem = options.fn(data);
 
         return renderedItem;

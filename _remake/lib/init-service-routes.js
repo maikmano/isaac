@@ -27,12 +27,10 @@ const upload = multer({
   },
 });
 
-// check JWT token received in the header of protected requests
 function checkIfAuthenticated(req, res, next) {
-  const bearerHeader = req.headers["authorization"]; // get token
+  const bearerHeader = req.headers["authorization"]; 
   if (typeof bearerHeader === "string") {
     const bearer = bearerHeader.split(" ")[1];
-    // verity received token against the JWT secret used for generating it
     jwt.verify(bearer, config.jwt.secret, (err, data) => {
       if (err) {
         return res
@@ -113,7 +111,6 @@ function validPass(req, res, next) {
   }
 }
 
-// validate subdomain
 const validSubdomain = (req, res, next) => {
   const subdomainRegex = /^[a-z]+[a-z0-9\-]*$/;
   const subdomain = req.query.subdomain || req.body.subdomain || req.body.appName;
@@ -188,8 +185,6 @@ export function initServiceRoutes({ app }) {
     );
   });
 
-  // login endpoint
-  // validation callbacks: validEmail, validPass
   app.post("/service/login", validEmail, validPass, (req, res) => {
     const { email, password } = req.body;
     database.query("SELECT * FROM users WHERE email = ?", [email], (err, results, _) => {
@@ -200,7 +195,7 @@ export function initServiceRoutes({ app }) {
         return res.status(403).json({ message: "User not found" }).end();
       }
       const user = results[0];
-      // compare password with password hash
+
       bcrypt.compare(password, user.pwd_hash, (err, passwordIsCorrect) => {
         if (err) {
           return res.status(500).json(err).end();
@@ -208,7 +203,6 @@ export function initServiceRoutes({ app }) {
         if (!passwordIsCorrect) {
           return res.status(403).json({ message: "Wrong email or password" }).end();
         }
-        // generate JWT token based on user id and JWT_SECRET
         const token = jwt.sign({ id: user.id }, config.jwt.secret, {
           expiresIn: config.jwt.duration,
         });
@@ -217,9 +211,6 @@ export function initServiceRoutes({ app }) {
     });
   });
 
-  // endpoint for checking if subdomain is available (not already in the DB)
-  // validation callbacks: checkIfAuthenticated, validSubdomain
-  // user must be authenticated to access it
   app.get("/service/subdomain/check", checkIfAuthenticated, validSubdomain, (req, res) => {
     const { subdomain } = req.query;
     database.query("SELECT * FROM apps WHERE name = ?", [subdomain], (err, result, _) => {
@@ -233,9 +224,6 @@ export function initServiceRoutes({ app }) {
     });
   });
 
-  // endpoint for registering subdomain (save in DB)
-  // validation callbacks: checkIfAuthenticated, validSubdomain
-  // user must be authenticated to access it
   app.post("/service/subdomain/register", checkIfAuthenticated, validSubdomain, (req, res) => {
     const { subdomain } = req.body;
 
@@ -255,7 +243,7 @@ export function initServiceRoutes({ app }) {
 
         database.query(
           "INSERT INTO apps (name, user_id, domain) VALUES (?, ?, ?)",
-          [subdomain, req.user_id, `${subdomain}.remakeapps.com`],
+          [subdomain, req.user_id, `${subdomain}.com`],
           (err, results, fields) => {
             if (err) {
               if (err.code === "ER_DUP_ENTRY") {
@@ -274,10 +262,6 @@ export function initServiceRoutes({ app }) {
     );
   });
 
-  // endpoint for deploying app
-  // upload app files if the user owns the app
-  // validation callbacks: checkIfAuthenticated, validSubdomain, upload.single(...)
-  // user must be authenticated to access it
   app.post(
     "/service/deploy",
     checkIfAuthenticated,
@@ -331,7 +315,6 @@ export function initServiceRoutes({ app }) {
     }
   );
 
-  // endpoint for linking custom domain to app
   app.post("/service/domain", checkIfAuthenticated, validSubdomain, validDomain, (req, res) => {
     const { appName, domain } = req.body;
 

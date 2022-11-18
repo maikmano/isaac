@@ -3,40 +3,7 @@ import { handleUpload } from "./fileUpload";
 import { getValueForClosestKey, setValueForClosestKey } from "../data-utilities";
 
 export default function () {
-  /* 
-    Support for the "update:" attribute for these elements:
-    - buttons
-    - input[type="radio"]
-    - input[type="checkbox"]
-    - select
 
-    Notes:
-    - These elements might be on the page OR inside an inline edit popover
-
-    For example:
-
-    <div object key:example-key>
-      <button update:example-key="example value"></button>
-    </div>
-
-    <div object key:example-key="dog">
-      <input type="radio" update:example-key value="dog" checked></input>
-      <input type="radio" update:example-key value="cat"></input>
-      <input type="radio" update:example-key value="bunny"></input>
-    </div>
-
-    <div object key:example-key="">
-      <input type="checkbox" update:example-key value="example value"></input>
-    </div>
-
-    <div object key:example-key="dog">
-      <select>
-        <option update:example-key value="dog" checked>dog</option>
-        <option update:example-key value="cat">cat</option>
-        <option update:example-key value="bunny">bunny</option>
-      </select>
-    </div>
-  */
   onAttributeEvent({
     eventTypes: ["input", "click", "change"],
     partialAttributeStrings: ["update:"],
@@ -66,25 +33,24 @@ export default function () {
         }
       }
 
-      // checkbox, radio, select, file upload
       if (eventType === "change") {
-        // checkbox
+
         if (inputType === "checkbox") {
           value = matchingElement.checked ? true : false;
         }
 
-        // radio, select
+
         if (inputType === "radio" || nodeName === "select") {
           value = matchingElement.value;
         }
 
-        // file upload
+
         if (inputType === "file") {
           handleUpload({ elem: matchingElement, keyName });
         }
       }
 
-      // click a normal element to set a value, e.g. <div update:example-key="example-value"></div>
+
       if (eventType === "click" && !matchingElement.closest("input, textarea, select")) {
         value = matchingElement.getAttribute(matchingAttribute);
       }
@@ -95,12 +61,6 @@ export default function () {
     },
   });
 
-  /* 
-    For example:
-    <div object key:example-key="on">
-      <button toggle:example-key></button>
-    </div>
-  */
   onAttributeEvent({
     eventTypes: ["click"],
     partialAttributeStrings: ["toggle:"],

@@ -12,19 +12,7 @@ import { getParams } from "../utils/get-params";
 import routeUtils from "../utils/route-utils";
 import RemakeStore from "./remake-store";
 
-/*
-  Remake has 3 types of routes
-  • BaseRoute
-  • UsernameRoute
-  • ItemRoute
 
-  Combined, these routes can render these patterns:
-  • /
-  • /pageName
-  • /username
-  • /username/pageName/
-  • /username/pageName/id
-*/
 
 async function renderPage({ req, res, pageName, username, itemId }) {
   let [pageTemplate, pageTemplateError] = await capture(
@@ -40,7 +28,6 @@ async function renderPage({ req, res, pageName, username, itemId }) {
   if (username) {
     [pageAuthor] = await capture(getUserData({ username, appName: req.appName }));
 
-    // if username is in the route, there should be a corresponding user
     if (!pageAuthor) {
       res.status(404).send("404 Not Found");
       return;
@@ -75,7 +62,7 @@ async function renderPage({ req, res, pageName, username, itemId }) {
 
 export async function initRenderedRoutes({ app }) {
   app.get("*", async function (req, res) {
-    // don't cache html from these routes
+
     res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 
     let params = req.urlData.pageParams;

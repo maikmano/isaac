@@ -20,17 +20,17 @@
     <div class="nav">
       <a class="logo" href="{{#if currentUser}}/{{currentUser.details.username}}{{else}}/{{/if}}">
         <img class="logo__image" src="/assets/images/logo.svg">
-        <span class="logo__text">TaskFellow <span class="logo__version">v1.0</span></span>
+        <span class="logo__text">Kanban <span class="logo__version">v1.0</span></span>
       </a>
       {{#if currentUser}}
         <div class="nav__user">
           <div>{{currentUser.details.username}}</div>
-          <a class="nav__button" href="/user/logout">Logout</a>
+          <a class="nav__button" href="/user/logout">Sair</a>
         </div>
       {{else}}
         <div class="nav__user">
-          <a class="nav__button" href="/user/signup">Sign up</a>
-          <a class="nav__button" href="/user/login">Log in</a>
+          <a class="nav__button" href="/user/signup">Cadastro</a>
+          <a class="nav__button" href="/user/login">Entrar</a>
         </div>
       {{/if}}
     </div>

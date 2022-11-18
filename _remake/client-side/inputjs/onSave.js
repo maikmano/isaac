@@ -7,17 +7,17 @@ import optionsData from "./optionsData";
 import { callOnSaveCallbacks } from "./callbacks";
 
 export function saveData({ data, path, saveToId }) {
-  // make live.js reload all resources in its cache when page is saved so it doesn't reload the page when user data changes -- and only reloads when dev edits a template
+
   window.liveJsResourcesLoaded = false;
   ajaxPost("/save", { data, path, saveToId }, function (res) {
-    // make live.js reload all resources in its cache when page is saved so it doesn't reload the page when user data changes -- and only reloads when dev edits a template
+
     window.liveJsResourcesLoaded = false;
     callOnSaveCallbacks(res);
   });
 }
 
 let saveFunctionsLookup = {
-  // default save function posts data to /save endpoint
+
   _defaultSave: function ({ data, path, saveToId, elem }) {
     saveData({ data, path, saveToId });
   },
@@ -29,14 +29,13 @@ export function initSaveFunctions() {
   }
 }
 
-// all saves go through here
 export function callSaveFunction(targetElem) {
   let saveEnabled = !targetElem.closest("[no-save]");
   if (!saveEnabled) {
     return;
   }
 
-  // get the save element, which is the closest element with a save attribute
+
   let saveElement = targetElem.closest("[custom-save], [key\\:id]");
   let isDefaultingToDataKeyIdSave = false;
   let isDefaultingToGlobalSave = false;
@@ -45,7 +44,7 @@ export function callSaveFunction(targetElem) {
   let savePath;
   let saveToId;
 
-  // if there's no save element, use the body element
+
   if (!saveElement) {
     saveElement = document.body;
     isDefaultingToGlobalSave = true;
@@ -64,10 +63,10 @@ export function callSaveFunction(targetElem) {
   let saveFunc = saveFunctionsLookup[saveFuncName];
   let dataInsideSaveElement = getSaveData(saveElement);
 
-  // save the data
+
   saveFunc({ data: dataInsideSaveElement, elem: targetElem, path: savePath, saveToId });
 
-  // show a warning if you think the save might be a mistakes
+
   let itemIdFromUrl = document.body.getAttribute("data-item-route");
   if (isDefaultingToGlobalSave && itemIdFromUrl) {
     console.log(
@@ -76,7 +75,7 @@ export function callSaveFunction(targetElem) {
     );
   }
 
-  // log the data if the debug option is turned on
+
   if (optionsData.logDataOnSave) {
     let logDataOnSaveString = "";
     logDataOnSaveString += "[Dev mode] Logging Remake Data on save: ";
@@ -101,7 +100,7 @@ export function callSaveFunction(targetElem) {
   }
 }
 
-// used when clicking an element/button that might want to set data ahead of the save
+
 export function callSaveFunctionNextTick(...args) {
   setTimeout(() => {
     callSaveFunction(...args);

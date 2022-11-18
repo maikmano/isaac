@@ -2,9 +2,7 @@ const net = require("net");
 import RemakeStore from "../lib/remake-store";
 const portSearchStartsAt = process.env.PORT || 3000;
 
-// Searches for available port so the app can start without error
-// IMPORTANT: only works in "development" mode, in production it just uses 
-//            the default port
+
 export default function getAvailablePort() {
 
   function getNextAvailablePort(currentPort, cb) {

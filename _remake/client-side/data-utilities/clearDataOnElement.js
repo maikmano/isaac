@@ -2,8 +2,7 @@ import { setValueForKeyName } from "./getAndSetKeyValues";
 import { forEachAttr } from "../hummingbird/lib/dom";
 const camelCase = require("lodash/camelCase");
 
-// used for the remove/hide inside the inline edit popover
-// needs to work on temporary keys because that's what the popover uses to store data
+
 export function setAllDataToEmptyStringsExceptIds(elem) {
   forEachAttr(elem, function (attrName, attrValue) {
     let keyPrefix = "key:";

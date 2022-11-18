@@ -10,12 +10,7 @@ import { forEachAttr } from "../hummingbird/lib/dom";
 const dashCase = require("lodash/kebabCase");
 const debounce = require("lodash/debounce");
 
-// get/set value for key name
-// actions:
-// - if value is empty, fallback to default attribute
-// - get/set the value directly in a key attribute or follow a command to get/set it
-// - if setting data, then also save the page
-// - call all watch functions nested inside the element where data was set
+
 function _valueForKeyName({ method, elem, keyName, value = "" }) {
   let dashCaseKeyName = dashCase(keyName);
   let normalKeyExists = elem.hasAttribute("key:" + dashCaseKeyName);
@@ -39,7 +34,7 @@ function _valueForKeyName({ method, elem, keyName, value = "" }) {
     value = elem.getAttribute(`default:${dashCaseKeyName}`) || "";
   }
 
-  let targetElems; // we get this out here so we can pass it to the watch attributes calls
+  let targetElems; 
   let targetAttr;
   if (!hasValidCommand) {
     targetElems = [elem];
@@ -50,7 +45,7 @@ function _valueForKeyName({ method, elem, keyName, value = "" }) {
       return elem.getAttribute(attrName);
     }
   } else {
-    // handle commands: @search, @attr, and any native elem property commands (e.g. @innerText)
+
     let targets = getTargetsForCommand({ elem, dashCaseKeyName, attrName, attrValue });
     targetElems = targets.targetElems;
     targetAttr = targets.targetAttr;
@@ -67,14 +62,11 @@ function _valueForKeyName({ method, elem, keyName, value = "" }) {
       callSaveFunction(elem);
     }
 
-    // look for any matching `watch:example-key` elements inside the current element
-    // and trigger their inner commands / custom functions
     triggerWatchAttributes({ elem, dashCaseKeyName, value, targetElems });
   }
 }
 
-// gets the elements where the data is stored
-// (useful if those elements are different from where they "key:" attribute is defined
+
 export function getTargetElemsForKeyName({ elem, keyName }) {
   let dashCaseKeyName = dashCase(keyName);
   let normalKeyExists = elem.hasAttribute("key:" + dashCaseKeyName);
@@ -82,11 +74,11 @@ export function getTargetElemsForKeyName({ elem, keyName }) {
   let attrValue = elem.getAttribute(attrName);
   let hasValidCommand = isValidCommand({ commandName: attrValue, includingSearchCommand: true });
 
-  let targetElems; // we get this out here so we can pass it to the watch attributes calls
+  let targetElems; 
   if (!hasValidCommand) {
     targetElems = [elem];
   } else {
-    // handle commands: @search, @attr, and any native elem property commands (e.g. @innerText)
+
     let targets = getTargetsForCommand({ elem, dashCaseKeyName, attrName, attrValue });
     targetElems = targets.targetElems;
   }
@@ -94,21 +86,16 @@ export function getTargetElemsForKeyName({ elem, keyName }) {
   return targetElems;
 }
 
-// set a value for an existing key
-// called on single element
-// can affet multiple child elements
+
 export function setValueForKeyName({ elem, keyName, value }) {
   _valueForKeyName({ method: "set", elem, keyName, value });
 }
 
-// get a value for an existing key
-// called on single element
-// gets value from a single child element (the first one it finds)
+
 export function getValueForKeyName({ elem, keyName }) {
   return _valueForKeyName({ method: "get", elem, keyName });
 }
 
-// can be a temporary or permanent key
 export function getClosestElemWithKey({ elem, keyName }) {
   let dashCaseKeyName = dashCase(keyName);
   let closestKeyElem = elem.closest(`[key\\:${dashCaseKeyName}]`);
@@ -137,8 +124,7 @@ export function setValueForClosestKey({ elem, keyName, value }) {
   _valueForClosestKey({ method: "set", elem, keyName, value });
 }
 
-// gets an array of key names from a single element
-// returns keynames with dashes in them: ["example-key", "another-example"]
+
 export function getKeyNamesFromElem(elem) {
   let keyPrefix = "key:";
   let temporaryKeyPrefix = "temporary:key:";

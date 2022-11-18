@@ -11,7 +11,7 @@ const fileUploadMiddleware = fileUpload({
 });
 
 export function initApiUpload({ app }) {
-  // route for "/upload" and "/app_*/upload"
+
   app.post(/(\/app_[a-z]+[a-z0-9-]*)?\/upload/, fileUploadMiddleware, async (req, res) => {
     if (!req.isAuthenticated()) {
       res.json({ success: false, reason: "notAuthorized" });

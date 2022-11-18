@@ -4,23 +4,7 @@ import RemakeStore from "../lib/remake-store";
 import { capture } from "./async-utils";
 import { doesPageExist } from "./page-utils";
 
-/*
-  Remake has 3 types of routes
-  • BaseRoute
-  • UsernameRoute
-  • ItemRoute
 
-  Combined, these routes can render these patterns:
-  • /
-  • /pageName
-  • /username
-  • /username/pageName/
-  • /username/pageName/id
-
-  Remake has two url formats
-  • Single tenant: domain/firstParam/secondParam/thirdParam
-  • Multi tenant: subdomain.domain/firstParam/secondParam/thirdParam
-*/
 
 let pageNamesForUserRoutes = ["login", "signup", "reset", "forgot"];
 export async function getParams({ req }) {

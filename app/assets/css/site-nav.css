@@ -12,14 +12,14 @@
   font-weight: 500;
 }
 .logo__version {
-  color: #596574;
+  color: #d1c4e9;
 }
 
 .nav {
   flex-shrink: 0;
   display: flex;
   height: 72px;
-  background-color: #0C2635;
+  background-color: #673ab7;
   color: #fff;
 }
 .nav__user {
@@ -33,11 +33,12 @@
   width: 90px;
   height: 46px;
   line-height: 46px;
-  background-color: #113346;
+  background-color: #320b86;
   border-radius: 5px;
   text-align: center;
 }
 .nav__button:hover {
   cursor: pointer;
   opacity: 0.5;
+  transition: 0.4s;
 }

@@ -26,10 +26,8 @@ function getValidElementProperties() {
   ];
 }
 
-// valid element properties with "@" prepended
 const validPropertyCommands = getValidElementProperties().map(p => "@" + p);
 
-// validPropertyCommands, @attr command, and maybe @search
 export function isValidCommand({ commandName, includingSearchCommand = false }) {
   return (
     (includingSearchCommand && commandName === "@search") ||

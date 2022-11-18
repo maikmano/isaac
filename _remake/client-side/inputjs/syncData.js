@@ -24,7 +24,6 @@ export function syncData({
   callOnSyncCallbacks({ keyNames, sourceElement, targetElement, shouldSyncIntoUpdateElems });
 }
 
-// used when clicking an element/button that might want to set data ahead of the sync
 export function syncDataNextTick(...args) {
   setTimeout(() => {
     syncData(...args);

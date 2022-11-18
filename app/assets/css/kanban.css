@@ -15,7 +15,7 @@
 }
 .header__text {
   font-size: 25px;
-  color: #536988;
+  color: #9a67ea;
   display: inline-block;
 }
 
@@ -50,7 +50,7 @@
   display: flex;
   padding-top: 0.5rem;
   margin-bottom: 0.65rem;
-  color: #536988;
+  color: #673ab7;
 }
 .stack__text {
   font-size: 18px;
@@ -63,7 +63,7 @@
   width: 25px;
   height: 25px;
   margin-left: auto;
-  background-color: #536988;
+  background-color: #673ab7;
   border-radius: 5px;
 }
 .stack__new:hover {
@@ -81,7 +81,7 @@
   min-height: 3rem;
   padding: 0 0.5rem;
   padding-bottom: 0.5rem;
-  background-color: #F2F6FA;
+  background-color: #c7a4ff;
   border-radius: 5px 5px 0 0;
 }
 .stack__add-card-container {
@@ -96,17 +96,19 @@
   justify-content: center;
   width: 100%;
   height: 41px;
-  border: 2px dashed #DCE0E4;
+  border: 2px dashed #c7a4ff;
   border-radius: 5px;
-  color: #536988;
+  color: #512da8;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
 }
 .stack__add-card:hover {
   cursor: pointer;
-  background-color: #e4ebf3;
-  border-color: #c5cfdb;
+  background-color: #c7a4ff;
+  border-color: #65499c;
+  transition: 0.4s;
+  color: #65499c;
 }
 .stack__add-card-icon {
   margin-right: 0.5rem;
@@ -118,13 +120,14 @@
   width: 100%;
   background-color: #FFF;
   border-radius: 5px;
-  color: #536988;
+  color: #9575cd;
   margin-top: 10px;
   box-shadow: 0px 4px 10px rgba(62, 114, 167, 0.15);
 }
 .card:hover {
   cursor: pointer;
-  background-color: #F2F6FA;
+  background-color: #e6ceff;
+  color: #512da8;
 }
 .card:nth-child(1) {
   margin-top: 15px;
@@ -158,7 +161,7 @@
 }
 
 .stack__list::-webkit-scrollbar-track {
-  background: #F2F6FA !important;
+  background: #b39ddb !important;
   border-radius: 5px;
 }
 
@@ -179,7 +182,7 @@
 
 /* Handle on hover */
 .board::-webkit-scrollbar-thumb:hover, .stack__list::-webkit-scrollbar-thumb:hover {
-  background: #DAD9DE;
+  background: #b39ddb;
 }
 
 @media only screen and (max-width: 658px) {
